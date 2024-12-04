@@ -1,6 +1,6 @@
 # Matplotlib-extensions
 
-Repository extending standard matplotlib functionality (typically) to higher dimensions with convenient and intuitive APIs.
+Repository extending standard matplotlib functionality (typically) to higher dimensions with convenient and intuitive APIs. Higher dimensions can mean e.g. including time, color or multiple figure axes.
 
 Extended functions:
 
