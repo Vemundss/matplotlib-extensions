@@ -40,14 +40,14 @@ def time_plot(*args, fig=None, ax=None, figsize=(3,3), fps=None, interval=50, **
     
     Returns
     -------
+    html : IPython.display.HTML
+        The HTML object to display the animation in Jupyter Notebook.
     fig : matplotlib.figure.Figure
         The figure object.
     ax : matplotlib.axes.Axes
         The axes object.
     animation : matplotlib.animation.FuncAnimation
         The animation object.
-    html : IPython.display.HTML
-        The HTML object to display the animation in Jupyter Notebook.
     
     Examples
     --------
@@ -76,6 +76,14 @@ def time_plot(*args, fig=None, ax=None, figsize=(3,3), fps=None, interval=50, **
     T = max(arg.shape[-1] for arg in args)
     # Plot the initial frame (t=0)
     line, = ax.plot(*[arg[...,0] for arg in args], **kwargs)
+    # Set limits to data range
+    xmin, xmax = args[0].min(), args[0].max()
+    ymin, ymax = args[1].min(), args[1].max()
+    ax.set_xlim(xmin, xmax)
+    ax.set_ylim(ymin, ymax)
+    if len(args) == 3:
+        zmin, zmax = args[2].min(), args[2].max()
+        ax.set_zlim(zmin, zmax)
 
     def animate(t):
         t = t % T  # Loop over frames
@@ -89,7 +97,7 @@ def time_plot(*args, fig=None, ax=None, figsize=(3,3), fps=None, interval=50, **
     # Create the animation
     animation = FuncAnimation(fig, animate, frames=T, interval=interval, blit=True)
     html = HTML(animation.to_jshtml())
-    return fig, ax, animation, html
+    return html, fig, ax, animation
 
 
 def time_scatter(*args, fig=None, ax=None, figsize=(3,3), fps=None, interval=50, **kwargs):
@@ -114,14 +122,14 @@ def time_scatter(*args, fig=None, ax=None, figsize=(3,3), fps=None, interval=50,
     
     Returns
     -------
+    html : IPython.display.HTML
+        The HTML object to display the animation in Jupyter Notebook.
     fig : matplotlib.figure.Figure
         The figure object.
     ax : matplotlib.axes.Axes
         The axes object.
     animation : matplotlib.animation.FuncAnimation
         The animation object.
-    html : IPython.display.HTML
-        The HTML object to display the animation in Jupyter Notebook.
     """
     # Create figure and axes if not provided
     if fig is None or ax is None:
@@ -136,12 +144,21 @@ def time_scatter(*args, fig=None, ax=None, figsize=(3,3), fps=None, interval=50,
     # Determine the number of frames (T)
     T = max(arg.shape[-1] for arg in args)
     # Plot the initial frame (t=0)
+    
     scatter = ax.scatter(*[arg[...,0] for arg in args], **kwargs)
+    # Set limits to data range
+    xmin, xmax = args[0].min(), args[0].max()
+    ymin, ymax = args[1].min(), args[1].max()
+    ax.set_xlim(xmin, xmax)
+    ax.set_ylim(ymin, ymax)
+    if len(args) == 3:
+        zmin, zmax = args[2].min(), args[2].max()
+        ax.set_zlim(zmin, zmax)
 
     def animate(t):
         t = t % T  # Loop over frames
         if len(args) == 2:
-            data = np.column_stack((args[0][..., t], args[1][..., t]))
+            data = np.column_stack((args[0][..., t], args[1][..., t])) # Shape: (N, 2)
             scatter.set_offsets(data)
         elif len(args) == 3:
             scatter._offsets3d = (args[0][..., t], args[1][..., t], args[2][..., t])
@@ -152,10 +169,10 @@ def time_scatter(*args, fig=None, ax=None, figsize=(3,3), fps=None, interval=50,
     # Create the animation
     animation = FuncAnimation(fig, animate, frames=T, interval=interval, blit=True)
     html = HTML(animation.to_jshtml())
-    return fig, ax, animation, html
+    return html, fig, ax, animation
 
 
-def multiimshow(zz, figsize=(3,3), normalize=True, add_colorbar=True, rect=(0, 0, 1, 0.87), axes_pad=0.05, **kwargs):
+def multi_imshow(zz, figsize=(3,3), normalize=True, add_colorbar=True, rect=(0, 0, 1, 0.87), axes_pad=0.05, **kwargs):
     """
     Displays multiple images in a grid format.
 
