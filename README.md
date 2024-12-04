@@ -5,7 +5,7 @@ Repository extending standard matplotlib functionality (typically) to higher dim
 Extended functions:
 
 ### _time_scatter_
-Scatter time extends plt.scatter(x, y, OPTIONAL: z) to accept temporally dependent spatial samples as e.g. shape(x) = (N,T) and animates
+time_scatter extends plt.scatter(x, y, OPTIONAL: z) to accept temporally dependent spatial samples as e.g. shape(x) = (N,T) and animates
 the temporal component.
 
 ```python
