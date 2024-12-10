@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib.animation import FuncAnimation
+from matplotlib.animation import FuncAnimation, ArtistAnimation
 from IPython.display import HTML
 from mpl_toolkits.axes_grid1 import ImageGrid
 from matplotlib.collections import LineCollection
@@ -100,7 +100,7 @@ def time_plot(*args, fig=None, ax=None, figsize=(3,3), fps=None, interval=50, **
     return html, fig, ax, animation
 
 
-def time_scatter(*args, fig=None, ax=None, figsize=(3,3), fps=None, interval=50, **kwargs):
+def time_scatter(*args, fig=None, ax=None, fps=None, return_fig=False, interval=50, **kwargs):
     """
     Extends matplotlib.pyplot.scatter to include a time dimension (T) for each array
     which is animated to show the evolution of the data over time.
@@ -134,42 +134,29 @@ def time_scatter(*args, fig=None, ax=None, figsize=(3,3), fps=None, interval=50,
     # Create figure and axes if not provided
     if fig is None or ax is None:
         if len(args) == 3:
-            fig = plt.figure(figsize=figsize)
+            fig = plt.figure()
             ax = fig.add_subplot(111, projection='3d')
         else:
-            fig, ax = plt.subplots(figsize=figsize)
-
+            fig, ax = plt.subplots()
     # Ensure all args are numpy arrays
     args = [np.array(arg) for arg in args]
     # Determine the number of frames (T)
     T = max(arg.shape[-1] for arg in args)
-    # Plot the initial frame (t=0)
-    
-    scatter = ax.scatter(*[arg[...,0] for arg in args], **kwargs)
-    # Set limits to data range
-    xmin, xmax = args[0].min(), args[0].max()
-    ymin, ymax = args[1].min(), args[1].max()
-    ax.set_xlim(xmin, xmax)
-    ax.set_ylim(ymin, ymax)
-    if len(args) == 3:
-        zmin, zmax = args[2].min(), args[2].max()
-        ax.set_zlim(zmin, zmax)
-
-    def animate(t):
-        t = t % T  # Loop over frames
-        if len(args) == 2:
-            data = np.column_stack((args[0][..., t], args[1][..., t])) # Shape: (N, 2)
-            scatter.set_offsets(data)
-        elif len(args) == 3:
-            scatter._offsets3d = (args[0][..., t], args[1][..., t], args[2][..., t])
-        return scatter,
-
+    # plot frames
+    artists = []
+    for t in range(T):
+        scatter = ax.scatter(*[arg[...,t] for arg in args], **kwargs)
+        artists.append([scatter])
     # Calculate interval if fps is provided
     interval = 1000 / fps if fps else interval
     # Create the animation
-    animation = FuncAnimation(fig, animate, frames=T, interval=interval, blit=True)
+    animation = ArtistAnimation(fig, artists, interval=interval)
+    #return animation
     html = HTML(animation.to_jshtml())
-    return html, fig, ax, animation
+    if return_fig:
+        return html, fig, ax, animation
+    plt.close(fig)
+    return html
 
 
 def multi_imshow(zz, figsize=(3,3), normalize=True, add_colorbar=True, rect=(0, 0, 1, 0.87), axes_pad=0.05, **kwargs):
