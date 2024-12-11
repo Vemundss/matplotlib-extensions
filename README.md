@@ -6,7 +6,6 @@ Extended functions:
 
 ### _time_scatter_
 time_scatter extends plt.scatter(x, y, OPTIONAL: z) to accept temporally dependent spatial samples x(t), y(t), OPTIONAL: z(t) and animates it. The arguments to time_scatter, thus, has shape shape(x(t)) = (N,T), compared to the purely spatial samples of scatter with shape shape(x) = (N,).
-the temporal component.
 
 ```python
 import numpy as np
