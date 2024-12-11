@@ -25,14 +25,9 @@ ax.scatter(*data.T, alpha=0.2)
 # the shape of data.T[:,None] is (2,1,200)
 # meaning we display each sample at distinct timepoints
 from mplextensions import time_scatter
-html, fig, ax, anim = time_scatter(*data.T[:,None], fps=24, fig=fig, ax=ax)
-
+html = time_scatter(*data.T[:,None], fps=24, fig=fig, ax=ax)
 # to display in a notebook include
-plt.close(fig) # close regular figure display
 html # show animation
-
-# Optional: save animation as .gif
-anim.save('test.gif', writer='pillow', fps=24)
 ```
 
 ![swiss_role_gif](https://github.com/user-attachments/assets/a8f0ba54-516b-4eaa-a9a4-587a99a353f8)
