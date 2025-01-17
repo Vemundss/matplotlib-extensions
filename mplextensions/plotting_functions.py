@@ -159,14 +159,14 @@ def time_scatter(*args, fig=None, ax=None, fps=None, return_fig=False, interval=
     return html
 
 
-def multi_imshow(zz, figsize=(3,3), normalize=True, add_colorbar=True, rect=(0, 0, 1, 0.87), axes_pad=0.05, **kwargs):
+def multi_imshow(zz, figsize=(10,10), normalize=True, add_colorbar=True, rect=(0, 0, 1, 0.87), axes_pad=0.05, **kwargs):
     """
     Displays multiple images in a grid format.
 
     Parameters
     ----------
     zz : np.ndarray
-        An array of images to display.
+        An array of images to display. Must be 3D, with shape (n_images, height, width).
     figsize : tuple, optional
         Size of the figure.
     normalize : bool, optional
@@ -180,33 +180,45 @@ def multi_imshow(zz, figsize=(3,3), normalize=True, add_colorbar=True, rect=(0, 
     **kwargs :
         Additional keyword arguments for imshow.
     """
+    # Validate input
+    if not isinstance(zz, np.ndarray):
+        zz = np.array(zz)
+    if zz.ndim != 3:
+        raise ValueError("Input 'zz' must be a 3D array with shape (n_images, height, width).")
+
     n_images = zz.shape[0]
     ncols = int(np.ceil(np.sqrt(n_images)))
     nrows = int(np.ceil(n_images / ncols))
+
     fig = plt.figure(figsize=figsize)
     grid_kwargs = {
-        'figure': fig,
         'rect': rect,
         'nrows_ncols': (nrows, ncols),
         'axes_pad': axes_pad
     }
-    if add_colorbar and normalize:
+
+    if add_colorbar:
         grid_kwargs.update({
             'cbar_mode': 'single',
             'cbar_location': 'right',
             'cbar_pad': 0.1,
             'cbar_size': '5%'
         })
-    grid = ImageGrid(**grid_kwargs)
+
+    grid = ImageGrid(fig, **grid_kwargs)
+
     vmin, vmax = (np.nanmin(zz), np.nanmax(zz)) if normalize else (None, None)
 
     # Plot images
+    im = None
     for ax, data in zip(grid, zz):
         im = ax.imshow(data, vmin=vmin, vmax=vmax, **kwargs)
         ax.axis('off')
-    
-    if normalize and add_colorbar:
+
+    # Add colorbar if required
+    if add_colorbar and im is not None:
         fig.colorbar(im, cax=grid.cbar_axes[0])
+
     return fig, grid.axes_all
 
 
