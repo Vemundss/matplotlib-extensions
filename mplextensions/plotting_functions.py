@@ -6,6 +6,73 @@ from mpl_toolkits.axes_grid1 import ImageGrid
 from matplotlib.collections import LineCollection
 from matplotlib.colors import Normalize
 
+
+def time_imshow(X, fig=None, ax=None, fps=None, return_fig=False, interval=50, add_colorbar=False, **kwargs):
+    """
+    Extends matplotlib imshow to 3D images and considers the first dimension as time by displaying it
+    as an animation.
+    
+    Parameters
+    ----------
+    X : np.ndarray
+        3D array of shape (T, H, W) or (T, H, W, C)
+    fig : matplotlib.figure.Figure, optional
+        Figure to use for the animation, by default None
+    ax : matplotlib.axes.Axes, optional
+        Axes to use for the animation, by default None
+    fps : int, optional
+        Frames per second for the animation, by default None
+    return_fig : bool, optional
+        Whether to return the figure and axes, by default False
+    interval : int, optional
+        Interval between frames in milliseconds, by default 50
+    add_colorbar : bool, optional
+        Whether to add a colorbar to the plot, by default False
+    **kwargs : dict
+        Additional keyword arguments to pass to the `imshow` function.
+
+    Returns
+    -------
+    HTML
+        HTML object displaying the animation.
+    """
+    # Validate input shape
+    if X.ndim not in (3, 4):
+        raise ValueError("Input array X must have 3 or 4 dimensions (T, H, W) or (T, H, W, C).")
+
+    # Create figure and axes if not provided
+    if fig is None or ax is None:
+        fig, ax = plt.subplots()
+
+    # Determine the number of frames (T) and prepare color normalization
+    T = X.shape[0]
+    vmin, vmax = X.min(), X.max()
+    kwargs.setdefault('vmin', vmin)
+    kwargs.setdefault('vmax', vmax)
+    
+    artists = []
+    # Plot frames
+    for t in range(T):
+        img = ax.imshow(X[t], **kwargs)
+        artists.append([img])
+
+    # Add colorbar if required
+    if add_colorbar:
+        sm = plt.cm.ScalarMappable(cmap=kwargs.get('cmap', 'viridis'), norm=Normalize(vmin=vmin, vmax=vmax))
+        fig.colorbar(sm, ax=ax)
+
+    # Calculate interval if fps is provided
+    interval = 1000 / fps if fps else interval
+    # Create the animation
+    animation = ArtistAnimation(fig, artists, interval=interval)
+    # Return animation
+    html = HTML(animation.to_jshtml())
+    if return_fig:
+        return html, fig, ax, animation
+    plt.close(fig)
+    return html
+
+
 def time_plot(*args, fig=None, ax=None, figsize=(3,3), fps=None, interval=50, **kwargs):
     """
     Extends matplotlib.pyplot.plot to include a time dimension (T) for each array
@@ -159,14 +226,14 @@ def time_scatter(*args, fig=None, ax=None, fps=None, return_fig=False, interval=
     return html
 
 
-def multi_imshow(zz, figsize=(3,3), normalize=True, add_colorbar=True, rect=(0, 0, 1, 0.87), axes_pad=0.05, **kwargs):
+def multi_imshow(zz, figsize=(10,10), normalize=True, add_colorbar=True, rect=(0, 0, 1, 0.87), axes_pad=0.05, **kwargs):
     """
     Displays multiple images in a grid format.
 
     Parameters
     ----------
     zz : np.ndarray
-        An array of images to display.
+        An array of images to display. Must be 3D, with shape (n_images, height, width).
     figsize : tuple, optional
         Size of the figure.
     normalize : bool, optional
@@ -180,33 +247,45 @@ def multi_imshow(zz, figsize=(3,3), normalize=True, add_colorbar=True, rect=(0, 
     **kwargs :
         Additional keyword arguments for imshow.
     """
+    # Validate input
+    if not isinstance(zz, np.ndarray):
+        zz = np.array(zz)
+    if zz.ndim != 3:
+        raise ValueError("Input 'zz' must be a 3D array with shape (n_images, height, width).")
+
     n_images = zz.shape[0]
     ncols = int(np.ceil(np.sqrt(n_images)))
     nrows = int(np.ceil(n_images / ncols))
+
     fig = plt.figure(figsize=figsize)
     grid_kwargs = {
-        'figure': fig,
         'rect': rect,
         'nrows_ncols': (nrows, ncols),
         'axes_pad': axes_pad
     }
-    if add_colorbar and normalize:
+
+    if add_colorbar:
         grid_kwargs.update({
             'cbar_mode': 'single',
             'cbar_location': 'right',
             'cbar_pad': 0.1,
             'cbar_size': '5%'
         })
-    grid = ImageGrid(**grid_kwargs)
+
+    grid = ImageGrid(fig, **grid_kwargs)
+
     vmin, vmax = (np.nanmin(zz), np.nanmax(zz)) if normalize else (None, None)
 
     # Plot images
+    im = None
     for ax, data in zip(grid, zz):
         im = ax.imshow(data, vmin=vmin, vmax=vmax, **kwargs)
         ax.axis('off')
-    
-    if normalize and add_colorbar:
+
+    # Add colorbar if required
+    if add_colorbar and im is not None:
         fig.colorbar(im, cax=grid.cbar_axes[0])
+
     return fig, grid.axes_all
 
 
