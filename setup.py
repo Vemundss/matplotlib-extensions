@@ -15,7 +15,7 @@ setup(
     description='Extensions for Matplotlib plotting functions',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
-    url='https://github.com/Vemundss/matplotlib-extensions',  # Replace with your repository URL
+    url='https://github.com/Vemundss/matplotlib-extensions', 
     classifiers=[
         'Programming Language :: Python :: 3',
         'Operating System :: OS Independent',
