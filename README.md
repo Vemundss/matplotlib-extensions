@@ -28,8 +28,9 @@ from mplextensions import time_scatter
 time_scatter(*data.T[:,None], fps=24, fig=fig, ax=ax)
 ```
 
-![time_scatter](https://github.com/user-attachments/assets/66467ae5-3b4b-4794-8a26-3c9bde07796c){width=400}
-
+<div align="center">
+    <img src="https://github.com/user-attachments/assets/66467ae5-3b4b-4794-8a26-3c9bde07796c" width="400">
+</div>
 
 
 ### _time_plot_
