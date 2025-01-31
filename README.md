@@ -28,7 +28,7 @@ from mplextensions import time_scatter
 time_scatter(*data.T[:,None], fps=24, fig=fig, ax=ax)
 ```
 
-![time_scatter](https://github.com/user-attachments/assets/66467ae5-3b4b-4794-8a26-3c9bde07796c)
+![time_scatter](https://github.com/user-attachments/assets/66467ae5-3b4b-4794-8a26-3c9bde07796c){width=400}
 
 
 
@@ -49,7 +49,7 @@ y_2d = np.sin(x_2d + t_values)  # Shape: (N, T)
 time_plot(x_2d, y_2d)
 ```
 
-![time_plot](https://github.com/user-attachments/assets/42006394-e286-49d7-8dd9-93f7aa450dc7)
+![time_plot](https://github.com/user-attachments/assets/42006394-e286-49d7-8dd9-93f7aa450dc7){width=400}
 
 
 
@@ -67,7 +67,7 @@ mesh = np.exp(-np.linalg.norm(mesh, axis=-1)) # Shape: (32, 32, 32) => 3D Gaussi
 time_imshow(mesh, add_colorbar=True)
 ```
 
-![multi_imshow](https://github.com/user-attachments/assets/b19cad8b-0ab7-4bc7-af71-3f11e232bf1e)
+![multi_imshow](https://github.com/user-attachments/assets/b19cad8b-0ab7-4bc7-af71-3f11e232bf1e){width=400}
 
 
 
@@ -100,4 +100,4 @@ values = y
 multicolor_plot(x, y)
 ```
 
-![multicolor_plot](https://github.com/user-attachments/assets/4b2c54d3-a533-4c94-b596-a31fc77b6314)
+![multicolor_plot](https://github.com/user-attachments/assets/4b2c54d3-a533-4c94-b596-a31fc77b6314){width=400}
