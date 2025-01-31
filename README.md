@@ -50,7 +50,9 @@ y_2d = np.sin(x_2d + t_values)  # Shape: (N, T)
 time_plot(x_2d, y_2d)
 ```
 
-![time_plot](https://github.com/user-attachments/assets/42006394-e286-49d7-8dd9-93f7aa450dc7){width=400}
+<div align="center">
+    <img src="https://github.com/user-attachments/assets/42006394-e286-49d7-8dd9-93f7aa450dc7" width="400">
+</div>
 
 
 
@@ -68,7 +70,9 @@ mesh = np.exp(-np.linalg.norm(mesh, axis=-1)) # Shape: (32, 32, 32) => 3D Gaussi
 time_imshow(mesh, add_colorbar=True)
 ```
 
-![multi_imshow](https://github.com/user-attachments/assets/b19cad8b-0ab7-4bc7-af71-3f11e232bf1e){width=400}
+<div align="center">
+    <img src="https://github.com/user-attachments/assets/b19cad8b-0ab7-4bc7-af71-3f11e232bf1e" width="400">
+</div>
 
 
 
@@ -101,4 +105,6 @@ values = y
 multicolor_plot(x, y)
 ```
 
-![multicolor_plot](https://github.com/user-attachments/assets/4b2c54d3-a533-4c94-b596-a31fc77b6314){width=400}
+<div align="center">
+    <img src="https://github.com/user-attachments/assets/4b2c54d3-a533-4c94-b596-a31fc77b6314" width="400">
+</div>
