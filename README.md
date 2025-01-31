@@ -56,18 +56,18 @@ time_plot(x_2d, y_2d)
 
 
 
-### _time_imshow_
-time_imshow extends plt.imshow(X) to accept 3D images and animates it along the first dimension. The argument X to time_imshow, thus, has shape (T, H, W) or (T, H, W, C). Time, height, width, and optionally channels.
+### _multi_imshow_
+multi_imshow extends plt.imshow(X) to accept 3D images and shows the slices of the first dimension on a 2D grid. The argument X has shape (N, H, W) or (N, H, W, C). number of images, height, width, and optionally channels.
 
 ```python
 import numpy as np
-from mplextensions import time_imshow
+from mplextensions import multi_imshow
 
 # create some 3D data
 mesh = np.stack(np.meshgrid(*[np.linspace(-np.pi, np.pi, 32)]*3), axis=-1) # Shape: (32, 32, 32, 3)
 mesh = np.exp(-np.linalg.norm(mesh, axis=-1)) # Shape: (32, 32, 32) => 3D Gaussian in (T, X, Y)
 
-time_imshow(mesh, add_colorbar=True)
+multi_imshow(mesh)
 ```
 
 <div align="center">
@@ -89,6 +89,11 @@ mesh = np.exp(-np.linalg.norm(mesh, axis=-1)) # Shape: (32, 32, 32) => 3D Gaussi
 
 time_imshow(mesh, add_colorbar=True)
 ```
+
+<div align="center">
+    <img src="https://github.com/user-attachments/assets/2a443d14-d84d-422e-8631-56698dc1110c" width="400">
+</div>
+
 
 
 ### _multicolor_plot_
