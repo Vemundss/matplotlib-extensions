@@ -28,7 +28,8 @@ from mplextensions import time_scatter
 time_scatter(*data.T[:,None], fps=24, fig=fig, ax=ax)
 ```
 
-![image](https://github.com/user-attachments/assets/0d1c15d2-aa34-4cc0-bc01-bc8c2208268b)
+![time_scatter](https://github.com/user-attachments/assets/66467ae5-3b4b-4794-8a26-3c9bde07796c)
+
 
 
 ### _time_plot_
@@ -48,5 +49,55 @@ y_2d = np.sin(x_2d + t_values)  # Shape: (N, T)
 time_plot(x_2d, y_2d)
 ```
 
-![image](https://github.com/user-attachments/assets/6224d9cf-488d-4f4b-8830-03d7610e4a68)
+![time_plot](https://github.com/user-attachments/assets/42006394-e286-49d7-8dd9-93f7aa450dc7)
 
+
+
+### _time_imshow_
+time_imshow extends plt.imshow(X) to accept 3D images and animates it along the first dimension. The argument X to time_imshow, thus, has shape (T, H, W) or (T, H, W, C). Time, height, width, and optionally channels.
+
+```python
+import numpy as np
+from mplextensions.plotting_functions import time_imshow
+
+# create some 3D data
+mesh = np.stack(np.meshgrid(*[np.linspace(-np.pi, np.pi, 32)]*3), axis=-1) # Shape: (32, 32, 32, 3)
+mesh = np.exp(-np.linalg.norm(mesh, axis=-1)) # Shape: (32, 32, 32) => 3D Gaussian in (T, X, Y)
+
+time_imshow(mesh, add_colorbar=True)
+```
+
+![multi_imshow](https://github.com/user-attachments/assets/b19cad8b-0ab7-4bc7-af71-3f11e232bf1e)
+
+
+
+### _time_imshow_
+time_imshow extends plt.imshow(X) to accept 3D images and animates it along the first dimension. The argument X to time_imshow, thus, has shape (T, H, W) or (T, H, W, C). Time, height, width, and optionally channels.
+
+```python
+import numpy as np
+from mplextensions.plotting_functions import time_imshow
+
+# create some 3D data
+mesh = np.stack(np.meshgrid(*[np.linspace(-np.pi, np.pi, 32)]*3), axis=-1) # Shape: (32, 32, 32, 3)
+mesh = np.exp(-np.linalg.norm(mesh, axis=-1)) # Shape: (32, 32, 32) => 3D Gaussian in (T, X, Y)
+
+time_imshow(mesh, add_colorbar=True)
+```
+
+
+### _multicolor_plot_
+multicolor_plot extends plt.plot(X) to accept a "values" parameter which colors the plot continuously.
+
+```python
+import numpy as np
+from mplextensions.plotting_functions import multicolor_plot
+
+x = np.linspace(0, 2 * np.pi, 100)
+y = np.sin(x)
+values = y
+
+multicolor_plot(x, y)
+```
+
+![multicolor_plot](https://github.com/user-attachments/assets/4b2c54d3-a533-4c94-b596-a31fc77b6314)
