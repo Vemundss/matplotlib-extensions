@@ -38,7 +38,7 @@ time_plot extends plt.plot(x, y, OPTIONAL: z) to accept temporally dependent spa
 
 ```python
 import numpy as np
-from mplextensions.plotting_functions import time_plot
+from mplextensions import time_plot
 
 # Create a 2D sine wave
 T = 100
@@ -61,7 +61,7 @@ time_imshow extends plt.imshow(X) to accept 3D images and animates it along the 
 
 ```python
 import numpy as np
-from mplextensions.plotting_functions import time_imshow
+from mplextensions import time_imshow
 
 # create some 3D data
 mesh = np.stack(np.meshgrid(*[np.linspace(-np.pi, np.pi, 32)]*3), axis=-1) # Shape: (32, 32, 32, 3)
@@ -81,7 +81,7 @@ time_imshow extends plt.imshow(X) to accept 3D images and animates it along the 
 
 ```python
 import numpy as np
-from mplextensions.plotting_functions import time_imshow
+from mplextensions import time_imshow
 
 # create some 3D data
 mesh = np.stack(np.meshgrid(*[np.linspace(-np.pi, np.pi, 32)]*3), axis=-1) # Shape: (32, 32, 32, 3)
@@ -96,7 +96,7 @@ multicolor_plot extends plt.plot(X) to accept a "values" parameter which colors 
 
 ```python
 import numpy as np
-from mplextensions.plotting_functions import multicolor_plot
+from mplextensions import multicolor_plot
 
 x = np.linspace(0, 2 * np.pi, 100)
 y = np.sin(x)
