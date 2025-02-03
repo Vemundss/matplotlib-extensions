@@ -3,6 +3,13 @@
 pip install matplotlib-extensions
 ```
 
+# Links:
+_Pypi_
+https://pypi.org/project/matplotlib-extensions/0.2.3/
+
+Github:
+https://github.com/Vemundss/matplotlib-extensions
+
 # Matplotlib-extensions
 
 Extends standard matplotlib plotting functions to higher dimensions with convenient and intuitive APIs. Higher dimensions can mean e.g. including time, color or multiple figure axes.
