@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='matplotlib-extensions',
-    version='0.2.0',
+    version='0.2.3',
     packages=find_packages(),
     license='MIT',
     description='Natural extensions to Matplotlib for multidimensional plotting.',

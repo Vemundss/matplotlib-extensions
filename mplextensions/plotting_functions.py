@@ -262,18 +262,20 @@ def time_scatter(*args, fig=None, ax=None, return_fig=False, fps=None, interval=
 
 def multi_imshow(zz, figsize=(10,10), normalize=True, add_colorbar=True, rect=(0, 0, 1, 0.87), axes_pad=0.05, **kwargs):
     """
-    Displays multiple images in a grid format.
+    Displays multiple images in a grid format, supporting grayscale and RGB images.
 
     Parameters
     ----------
     zz : np.ndarray
-        An array of images to display. Must be 3D, with shape (n_images, height, width).
+        An array of images to display. Must be 3D (grayscale) or 4D (RGB).
+        - Grayscale: (n_images, height, width)
+        - RGB: (n_images, height, width, channels)
     figsize : tuple, optional
         Size of the figure.
     normalize : bool, optional
-        Whether to normalize the color scale.
+        Whether to normalize grayscale images.
     add_colorbar : bool, optional
-        Whether to add a colorbar.
+        Whether to add a colorbar (only for grayscale images).
     rect : tuple, optional
         Position of the grid within the figure.
     axes_pad : float, optional
@@ -302,12 +304,15 @@ def multi_imshow(zz, figsize=(10,10), normalize=True, add_colorbar=True, rect=(0
     # Validate input
     if not isinstance(zz, np.ndarray):
         zz = np.array(zz)
-    if zz.ndim != 3:
-        raise ValueError("Input 'zz' must be a 3D array with shape (n_images, height, width).")
+    
+    if zz.ndim not in {3, 4}:
+        raise ValueError("Input 'zz' must be 3D (grayscale) or 4D (RGB).")
 
     n_images = zz.shape[0]
     ncols = int(np.ceil(np.sqrt(n_images)))
     nrows = int(np.ceil(n_images / ncols))
+    
+    is_rgb = zz.ndim == 4 and zz.shape[-1] == 3  # Check if input is RGB
 
     fig = plt.figure(figsize=figsize)
     grid_kwargs = {
@@ -316,7 +321,7 @@ def multi_imshow(zz, figsize=(10,10), normalize=True, add_colorbar=True, rect=(0
         'axes_pad': axes_pad
     }
 
-    if add_colorbar:
+    if add_colorbar and not is_rgb:
         grid_kwargs.update({
             'cbar_mode': 'single',
             'cbar_location': 'right',
@@ -325,16 +330,23 @@ def multi_imshow(zz, figsize=(10,10), normalize=True, add_colorbar=True, rect=(0
         })
 
     grid = ImageGrid(fig, **grid_kwargs)
-    vmin, vmax = (np.nanmin(zz), np.nanmax(zz)) if normalize else (None, None)
+
+    if normalize and not is_rgb:
+        vmin, vmax = np.nanmin(zz), np.nanmax(zz)
+    else:
+        vmin, vmax = None, None
 
     # Plot images
     im = None
     for ax, data in zip(grid, zz):
-        im = ax.imshow(data, vmin=vmin, vmax=vmax, **kwargs)
+        if is_rgb:
+            im = ax.imshow(data, **kwargs)  # RGB images
+        else:
+            im = ax.imshow(data, vmin=vmin, vmax=vmax, cmap="gray", **kwargs)  # Grayscale
         ax.axis('off')
 
-    # Add colorbar if required
-    if add_colorbar and im is not None:
+    # Add colorbar if required and applicable
+    if add_colorbar and im is not None and not is_rgb:
         fig.colorbar(im, cax=grid.cbar_axes[0])
 
     return fig, grid.axes_all
